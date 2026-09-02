@@ -22,3 +22,15 @@ create view stock_critico_ingredientes as
 select id, nombre, stock_actual, stock_minimo, costo_unitario
 from ingredientes
 where stock_actual < stock_minimo;
+
+create view reporte_ventas_diarias as
+select 
+    date(ped.fecha) as fecha,
+    count(ped.id) as total_pedidos,
+    sum(ped.total) as ventas_totales,
+    sum(ped.cantidad) as pizzas_vendidas,
+    avg(ped.total) as promedio_pedido
+from pedidos ped
+where ped.estado != 'cancelado'
+group by date(ped.fecha)
+order by fecha desc;

@@ -59,3 +59,18 @@ from (
 ) as total_pedidos
 join clientes c on total_pedidos.cliente_fk = c.id
 join persona per on per.cliente_fk = c.id;
+
+-- Alertar sobre ingredientes con stock bajo
+select 
+    nombre,
+    stock_actual,
+    stock_minimo,
+    round((stock_actual / stock_minimo) * 100, 2) as porcentaje_stock,
+    case 
+        when stock_actual < stock_minimo then 'CRÍTICO'
+        when stock_actual < stock_minimo * 2 then 'BAJO'
+        else 'OK'
+    end as estado_stock
+from ingredientes
+where stock_actual < stock_minimo * 2
+order by porcentaje_stock asc;
